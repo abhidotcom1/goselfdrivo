@@ -57,9 +57,9 @@ export default function AdminUsersPage() {
         <div>
             <div className="sm:flex sm:items-center">
                 <div className="sm:flex-auto">
-                    <h1 className="text-2xl font-semibold text-gray-900">Users Directory</h1>
+                    <h1 className="text-2xl font-semibold text-gray-900">Customer Leads</h1>
                     <p className="mt-2 text-sm text-gray-700">
-                        Manage customers, staff, and administrators.
+                        Manage registered customers (leads) and view their booking history.
                     </p>
                 </div>
             </div>

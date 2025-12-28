@@ -20,7 +20,7 @@ export default function DashboardLayout({
         { name: 'Bookings', href: '/dashboard/admin/bookings', icon: Calendar },
         { name: 'Expenses', href: '/dashboard/admin/expenses', icon: Wallet },
         { name: 'Payments', href: '/dashboard/admin/payments', icon: CreditCard },
-        { name: 'Users', href: '/dashboard/admin/users', icon: Users },
+        { name: 'Leads', href: '/dashboard/admin/users', icon: Users },
         { name: 'Settings', href: '/dashboard/admin/settings', icon: Settings },
     ]
 
