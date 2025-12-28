@@ -34,7 +34,7 @@ export default function AdminUsersPage() {
                 bookings (
                     id,
                     total_amount,
-                    due_amount
+                    total_amount
                 )
             `)
             .order('created_at', { ascending: false })
@@ -105,7 +105,7 @@ export default function AdminUsersPage() {
                                         filteredUsers.map((user) => {
                                             const bookingCount = user.bookings?.length || 0
                                             const totalSpent = user.bookings?.reduce((acc, b) => acc + (b.total_amount || 0), 0) || 0
-                                            const pendingDues = user.bookings?.reduce((acc, b) => acc + (b.due_amount || 0), 0) || 0
+                                            const pendingDues = 0 // Calculator logic needed if column missing
 
                                             return (
                                                 <tr key={user.id}>

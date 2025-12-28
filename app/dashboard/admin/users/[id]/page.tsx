@@ -65,7 +65,6 @@ export default function UserDetailsPage() {
             .select(`
                 id,
                 total_amount,
-                due_amount,
                 status,
                 created_at,
                 pickup_time,
@@ -85,7 +84,7 @@ export default function UserDetailsPage() {
                 start_time: b.pickup_time,
                 end_time: b.drop_time,
                 total_amount: b.total_amount,
-                due_amount: b.due_amount,
+                due_amount: 0, // Calculated field in future
                 status: b.status,
                 created_at: b.created_at
             }))

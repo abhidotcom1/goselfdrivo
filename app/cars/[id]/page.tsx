@@ -1,10 +1,11 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabaseClient'
 import { Car, Fuel, Zap, Users, ArrowLeft, Shield, MapPin, Check, ChevronRight, Star, Clock } from 'lucide-react'
+import { useAuth } from '@/components/providers/AuthProvider'
 
 // Mock car for dev if not found
 const MOCK_CAR = {
@@ -25,6 +26,16 @@ export default function CarDetailsPage() {
     const [car, setCar] = useState<any>(null)
     const [loading, setLoading] = useState(true)
     const [selectedImageIndex, setSelectedImageIndex] = useState(0)
+    const { user } = useAuth()
+    const router = useRouter()
+
+    const handleBookNow = () => {
+        if (!user) {
+            router.push('/auth/login')
+        } else {
+            router.push(`/book/${car.id}`)
+        }
+    }
 
     useEffect(() => {
         const fetchCar = async () => {
@@ -107,8 +118,8 @@ export default function CarDetailsPage() {
                                         key={idx}
                                         onClick={() => setSelectedImageIndex(idx)}
                                         className={`relative w-24 h-16 flex-shrink-0 rounded-lg overflow-hidden border-2 transition-all ${selectedImageIndex === idx
-                                                ? 'border-[#F5B301] opacity-100'
-                                                : 'border-transparent opacity-50 hover:opacity-80'
+                                            ? 'border-[#F5B301] opacity-100'
+                                            : 'border-transparent opacity-50 hover:opacity-80'
                                             }`}
                                     >
                                         <img src={img} alt={`View ${idx}`} className="h-full w-full object-cover" />
@@ -152,9 +163,9 @@ export default function CarDetailsPage() {
                                     <span className="text-gray-500">/hour</span>
                                 </div>
                             </div>
-                            <Link href={`/book/${car.id}`} className="px-8 py-3 bg-[#F5B301] text-black font-bold rounded-xl hover:bg-[#D89E00] transition-colors shadow-lg shadow-orange-500/20 flex items-center">
+                            <button onClick={handleBookNow} className="px-8 py-3 bg-[#F5B301] text-black font-bold rounded-xl hover:bg-[#D89E00] transition-colors shadow-lg shadow-orange-500/20 flex items-center">
                                 Book Now <ChevronRight className="ml-2 w-5 h-5" />
-                            </Link>
+                            </button>
                         </div>
 
                         {/* Specs Grid */}
