@@ -201,17 +201,6 @@ create trigger on_auth_user_created
 -- Helper to set user as admin
 -- update public.profiles set role = 'admin' where email = 'your-email@example.com';
 
--- 1. PROFILES (Enhanced)
-create table public.profiles (
-  id uuid references auth.users not null primary key,
-  full_name text,
-  phone text,
-  email text, -- Copied from auth for easier querying
-  driver_license_url text, -- For verification
-  id_proof_url text,      -- For verification
-  is_verified boolean default false, -- Admin verification status
-  role text check (role in ('admin', 'customer', 'driver', 'owner')) default 'customer',
-  created_at timestamptz default now()
 );
 
 alter table public.profiles enable row level security;
