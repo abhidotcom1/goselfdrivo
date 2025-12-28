@@ -98,7 +98,7 @@ export default function HomePage() {
         <div className="min-h-screen bg-gray-50 font-sans">
 
             {/* HER HERO SECTION */}
-            <div className="relative bg-[#0F0F0F] pt-20 pb-12 lg:pt-32 lg:pb-28 overflow-hidden">
+            <div className="relative bg-[#1E1E1E] pt-20 pb-12 lg:pt-32 lg:pb-28 overflow-hidden">
                 {/* Background Pattern */}
                 <div className="absolute inset-0 z-0 opacity-20">
                     <img
@@ -106,7 +106,7 @@ export default function HomePage() {
                         alt="Background"
                         className="w-full h-full object-cover"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-r from-black via-[#0F0F0F] to-transparent"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#121212] via-[#1E1E1E] to-transparent"></div>
                 </div>
 
                 <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -156,7 +156,7 @@ export default function HomePage() {
             </div>
 
             {/* FLEET SECTION */}
-            <div id="fleet" className="py-20 bg-[#161616]">
+            <div id="fleet" className="py-20 bg-[#252525]">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-16">
                         <h2 className="text-[#F5B301] font-semibold tracking-wide uppercase text-sm mb-3">Our Collection</h2>
@@ -187,7 +187,7 @@ export default function HomePage() {
                         {loading ? (
                             [1, 2, 3].map(i => <div key={i} className="h-96 bg-gray-800 rounded-2xl animate-pulse" />)
                         ) : filteredCars.map((car) => (
-                            <div key={car.id} className="group bg-[#1C1C1C] rounded-2xl overflow-hidden border border-gray-800 hover:border-gray-700 transition-all hover:shadow-2xl hover:shadow-black/50">
+                            <div key={car.id} className="group bg-[#2E2E2E] rounded-2xl overflow-hidden border border-gray-700 hover:border-gray-600 transition-all hover:shadow-2xl hover:shadow-black/50">
                                 <div className="relative h-56 overflow-hidden">
                                     <img
                                         src={car.image_urls?.[0] || car.image_url || 'https://via.placeholder.com/800'}
@@ -245,7 +245,7 @@ export default function HomePage() {
             </div>
 
             {/* CONTENT SECTION */}
-            <div className="py-20 bg-[#121212] border-t border-gray-900">
+            <div className="py-20 bg-[#252525] border-t border-gray-800">
                 <div className="max-w-4xl mx-auto px-4 text-center">
                     <h2 className="text-3xl font-bold text-white mb-6">Your Guide to Self Drive Car Rental in Delhi</h2>
                     <p className="text-gray-400 mb-8 leading-relaxed">
@@ -254,14 +254,14 @@ export default function HomePage() {
                     </p>
 
                     <div className="grid md:grid-cols-2 gap-6 text-left">
-                        <div className="bg-[#1C1C1C] p-6 rounded-xl border border-gray-800">
+                        <div className="bg-[#2E2E2E] p-6 rounded-xl border border-gray-700">
                             <div className="w-10 h-10 rounded-lg bg-[#F5B301]/20 flex items-center justify-center mb-4 text-[#F5B301]">
                                 <Shield className="w-5 h-5" />
                             </div>
                             <h4 className="text-lg font-bold text-white mb-2">Safe & Compare</h4>
                             <p className="text-sm text-gray-400">Our fleet is strictly verified and insured. Compare prices and features to find your perfect ride.</p>
                         </div>
-                        <div className="bg-[#1C1C1C] p-6 rounded-xl border border-gray-800">
+                        <div className="bg-[#2E2E2E] p-6 rounded-xl border border-gray-700">
                             <div className="w-10 h-10 rounded-lg bg-[#F5B301]/20 flex items-center justify-center mb-4 text-[#F5B301]">
                                 <Clock className="w-5 h-5" />
                             </div>
@@ -273,7 +273,7 @@ export default function HomePage() {
             </div>
 
             {/* SERVICES GRID */}
-            <div className="py-20 bg-[#0F0F0F]">
+            <div className="py-20 bg-[#1E1E1E]">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="mb-12">
                         <h2 className="text-3xl font-bold text-white mb-4">Our Services</h2>
@@ -281,7 +281,7 @@ export default function HomePage() {
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {SERVICES.map((service, idx) => (
-                            <div key={idx} className="group p-8 bg-[#181818] rounded-2xl border border-gray-800 hover:border-[#F5B301]/50 transition-all hover:bg-[#202020]">
+                            <div key={idx} className="group p-8 bg-[#2A2A2A] rounded-2xl border border-gray-700 hover:border-[#F5B301]/50 transition-all hover:bg-[#333333]">
                                 <service.icon className="w-10 h-10 text-[#F5B301] mb-6 group-hover:scale-110 transition-transform" />
                                 <h4 className="text-xl font-bold text-white mb-3">{service.title}</h4>
                                 <p className="text-gray-400 text-sm leading-relaxed mb-6">{service.desc}</p>
@@ -295,7 +295,7 @@ export default function HomePage() {
             </div>
 
             {/* FOOTER */}
-            <footer className="bg-black text-white pt-20 pb-10 border-t border-gray-900">
+            <footer className="bg-[#151515] text-white pt-20 pb-10 border-t border-gray-800">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
                         <div className="col-span-1 md:col-span-1">
