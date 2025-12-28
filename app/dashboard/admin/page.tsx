@@ -39,9 +39,11 @@ export default function AdminDashboardPage() {
             ]);
 
             // Process Payments
+            if (paymentsRes.error) console.error("Payments Error:", paymentsRes.error);
             const totalCollected = paymentsRes.data?.reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0) || 0;
 
             // Process Expenses
+            if (expensesRes.error) console.error("Expenses Error:", expensesRes.error);
             const totalExpenses = expensesRes.data?.reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0) || 0;
 
             // Process Dues
@@ -78,6 +80,15 @@ export default function AdminDashboardPage() {
     return (
         <div>
             <h1 className="text-2xl font-semibold text-gray-900">Dashboard Overview</h1>
+
+            {/* DEBUG PANEL - REMOVE AFTER FIXING */}
+            <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-md text-xs font-mono">
+                <p><strong>Debug Info:</strong></p>
+                <p>Status: {stats[0].loading ? 'Loading Stats...' : 'Stats Loaded'}</p>
+                {/* We need to fetch profile client-side to show role here if not passed via props, 
+                    but stats loading status is a good proxy for connection health. 
+                    Let's also try to read the profile from Supabase directly here for debug. */}
+            </div>
 
             <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 {stats.map((item) => (
