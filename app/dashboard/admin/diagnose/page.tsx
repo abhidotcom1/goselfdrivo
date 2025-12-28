@@ -20,12 +20,12 @@ export default function DiagnosticsPage() {
 
         if (!session) {
             log('❌ No active session. user is NOT logged in.')
-            setStatus(prev => ({ ...prev, auth: 'Failed' }))
+            setStatus((prev: any) => ({ ...prev, auth: 'Failed' }))
             return
         }
 
         log(`✅ Logged in as: ${session.user.email} (ID: ${session.user.id})`)
-        setStatus(prev => ({ ...prev, auth: 'Success' }))
+        setStatus((prev: any) => ({ ...prev, auth: 'Success' }))
 
         // 2. Check Profile & Role
         log(`Checking user profile for ID: ${session.user.id}...`)
@@ -40,10 +40,10 @@ export default function DiagnosticsPage() {
             if (profileError.code === 'PGRST116') {
                 log('⚠️ Profile not found! The handle_new_user trigger might have failed.')
             }
-            setStatus(prev => ({ ...prev, profile: 'Failed' }))
+            setStatus((prev: any) => ({ ...prev, profile: 'Failed' }))
         } else {
             log(`✅ Profile found. Role: ${profile.role}`)
-            setStatus(prev => ({ ...prev, profile: profile.role === 'admin' ? 'Success (Admin)' : `Failed (Role: ${profile.role})` }))
+            setStatus((prev: any) => ({ ...prev, profile: profile.role === 'admin' ? 'Success (Admin)' : `Failed (Role: ${profile.role})` }))
         }
 
         // 3. Test Insert (Cars)
@@ -68,7 +68,7 @@ export default function DiagnosticsPage() {
         if (insertError) {
             log(`❌ INSERT FAILED: ${insertError.message} (Code: ${insertError.code})`)
             log(`Details: ${insertError.details}, Hint: ${insertError.hint}`)
-            setStatus(prev => ({ ...prev, insert: 'Failed' }))
+            setStatus((prev: any) => ({ ...prev, insert: 'Failed' }))
         } else {
             log('✅ INSERT SUCCESS! Car added.')
             // Clean up
@@ -76,7 +76,7 @@ export default function DiagnosticsPage() {
                 log('Cleaning up (deleting test car)...')
                 await supabase.from('cars').delete().eq('id', insertData[0].id)
             }
-            setStatus(prev => ({ ...prev, insert: 'Success' }))
+            setStatus((prev: any) => ({ ...prev, insert: 'Success' }))
         }
     }
 
