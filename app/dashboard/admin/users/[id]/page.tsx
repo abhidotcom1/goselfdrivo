@@ -69,13 +69,13 @@ export default function UserDetailsPage() {
                 created_at,
                 pickup_time,
                 drop_time,
-                car:public.cars(name, car_number)
+                car:cars(name, car_number)
             `)
             .eq('user_id', userId)
             .order('created_at', { ascending: false })
 
         if (bookingsError) {
-            console.error('Error fetching bookings:', bookingsError)
+            console.error('Error fetching bookings:', JSON.stringify(bookingsError, null, 2))
         } else {
             // Map the response to our Booking interface
             const mappedBookings = bookingsData.map((b: any) => ({
