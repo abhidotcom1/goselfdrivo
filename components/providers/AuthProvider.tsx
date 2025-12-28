@@ -33,6 +33,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     let mounted = true;
 
+    // Safety timeout to prevent infinite loading state
+    const loadingTimeout = setTimeout(() => {
+      if (mounted && loading) {
+        console.warn('AuthProvider: Forced loading completion after timeout');
+        setLoading(false);
+      }
+    }, 8000);
+
     const fetchProfile = async (userId: string) => {
       try {
         console.log('AuthProvider: Fetching profile for', userId)
@@ -45,6 +53,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         if (mounted) {
           if (error) {
             console.warn('AuthProvider: fetchProfile error', error)
+            // If profile missing, maybe we should create one? Or just null.
           } else {
             console.log('AuthProvider: Profile fetched', data)
             setProfile(data)
@@ -56,17 +65,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     const initAuth = async () => {
-      // Get initial session
-      const { data: { session: initialSession } } = await supabase.auth.getSession()
+      try {
+        // Get initial session
+        const { data: { session: initialSession }, error } = await supabase.auth.getSession()
+        if (error) throw error;
 
-      if (mounted) {
-        setSession(initialSession)
-        setUser(initialSession?.user ?? null)
+        if (mounted) {
+          setSession(initialSession)
+          setUser(initialSession?.user ?? null)
 
-        if (initialSession?.user) {
-          await fetchProfile(initialSession.user.id)
+          if (initialSession?.user) {
+            await fetchProfile(initialSession.user.id)
+          }
         }
-        setLoading(false)
+      } catch (err) {
+        console.error('AuthProvider: initAuth error', err)
+      } finally {
+        if (mounted) setLoading(false)
       }
 
       // Listen for changes
@@ -77,11 +92,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setSession(currentSession)
         setUser(currentSession?.user ?? null)
 
-        // Only fetch profile if user changed or on initial sign in
-        // (Simplification: just fetch if we have a user, basic caching could be added but this is safer)
         if (currentSession?.user) {
-          // Verify if we already have the correct profile to avoid refetch?
-          // For now, refetching ensures role updates are caught on login
+          // If switching users or fresh login, update profile
           await fetchProfile(currentSession.user.id)
         } else {
           setProfile(null)
@@ -101,6 +113,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     return () => {
       mounted = false
+      clearTimeout(loadingTimeout)
       if (authSubscription) authSubscription.unsubscribe()
     }
   }, [])

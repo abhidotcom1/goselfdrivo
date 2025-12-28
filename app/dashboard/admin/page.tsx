@@ -21,43 +21,52 @@ export default function AdminDashboardPage() {
 
     const fetchStats = async () => {
         try {
-            // 1. Total Collected (Payments Table)
-            const { data: paymentsData } = await supabase.from('payments').select('amount')
-            const totalCollected = paymentsData?.reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0) || 0
+            console.log("Fetching admin stats...");
 
-            // 2. Total Expenses
-            const { data: expensesData } = await supabase.from('expenses').select('amount')
-            const totalExpenses = expensesData?.reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0) || 0
+            // Run all independent queries in parallel
+            const [
+                paymentsRes,
+                expensesRes,
+                bookingsRes,
+                activeBookingsRes,
+                fleetSizeRes
+            ] = await Promise.all([
+                supabase.from('payments').select('amount'),
+                supabase.from('expenses').select('amount'),
+                supabase.from('bookings').select('due_amount'),
+                supabase.from('bookings').select('*', { count: 'exact', head: true }).eq('status', 'ON_TRIP'),
+                supabase.from('cars').select('*', { count: 'exact', head: true })
+            ]);
 
-            // 3. Pending Dues (Bookings)
-            const { data: bookingsData } = await supabase.from('bookings').select('due_amount')
-            const totalDues = bookingsData?.reduce((acc, curr) => acc + (Number(curr.due_amount) || 0), 0) || 0
+            // Process Payments
+            const totalCollected = paymentsRes.data?.reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0) || 0;
 
-            // 4. Counts
-            const { count: activeBookings } = await supabase
-                .from('bookings')
-                .select('*', { count: 'exact', head: true })
-                .eq('status', 'ON_TRIP')
+            // Process Expenses
+            const totalExpenses = expensesRes.data?.reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0) || 0;
 
-            const { count: fleetSize } = await supabase
-                .from('cars')
-                .select('*', { count: 'exact', head: true })
+            // Process Dues
+            const totalDues = bookingsRes.data?.reduce((acc, curr) => acc + (Number(curr.due_amount) || 0), 0) || 0;
+
+            // Process Counts
+            const activeBookings = activeBookingsRes.count || 0;
+            const fleetSize = fleetSizeRes.count || 0;
 
             // Derived
-            const netProfit = totalCollected - totalExpenses
-            setFinancialMetrics({ revenue: totalCollected, expenses: totalExpenses })
+            const netProfit = totalCollected - totalExpenses;
+            setFinancialMetrics({ revenue: totalCollected, expenses: totalExpenses });
 
             setStats([
                 { name: 'Total Collected', value: `₹${totalCollected.toLocaleString()}`, icon: DollarSign, color: 'text-[#F5B301]', loading: false },
                 { name: 'Total Expenses', value: `₹${totalExpenses.toLocaleString()}`, icon: DollarSign, color: 'text-red-500', loading: false },
                 { name: 'Net Profit', value: `₹${netProfit.toLocaleString()}`, icon: Activity, color: 'text-black', loading: false },
                 { name: 'Pending Dues', value: `₹${totalDues.toLocaleString()}`, icon: Calendar, color: 'text-red-500', loading: false },
-                { name: 'Active Trips', value: String(activeBookings || 0), icon: Activity, color: 'text-[#F5B301]', loading: false },
-                { name: 'Fleet Size', value: String(fleetSize || 0), icon: Car, color: 'text-black', loading: false },
-            ])
-
+                { name: 'Active Trips', value: String(activeBookings), icon: Activity, color: 'text-[#F5B301]', loading: false },
+                { name: 'Fleet Size', value: String(fleetSize), icon: Car, color: 'text-black', loading: false },
+            ]);
         } catch (error) {
-            console.error('Error fetching dashboard stats:', error)
+            console.error('Error fetching dashboard stats:', error);
+            // Even on error, stop loading state to avoid UI freeze perception
+            setStats(prev => prev.map(item => ({ ...item, loading: false, value: 'Error' })));
         }
     }
 
