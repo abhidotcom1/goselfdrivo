@@ -3,6 +3,9 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --brand-yellow: #F5B301;
+  --brand-black: #1C1C1C;
+  --brand-hover-yellow: #D89E00;
 }
 
 @theme inline {
