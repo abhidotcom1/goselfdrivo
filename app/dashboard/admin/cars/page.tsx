@@ -55,17 +55,32 @@ export default function AdminCarsPage() {
 
     const fetchCars = async () => {
         setLoading(true)
-        const { data, error } = await supabase
-            .from('cars')
-            .select('*')
-            .order('created_at', { ascending: false })
+        try {
+            // Safety timeout of 5 seconds
+            const timeoutPromise = new Promise((_, reject) =>
+                setTimeout(() => reject(new Error('Fetch timeout')), 5000)
+            )
 
-        if (error) {
-            console.error('Error fetching cars:', error)
-        } else {
-            setCars(data || [])
+            const fetchPromise = supabase
+                .from('cars')
+                .select('*')
+                .order('created_at', { ascending: false })
+
+            const { data, error } = await Promise.race([fetchPromise, timeoutPromise]) as any
+
+            if (error) {
+                console.error('Error fetching cars:', error)
+                // Fallback: If 406 or RLS error, maybe empty array
+                if (data === null) setCars([])
+            } else {
+                setCars(data || [])
+            }
+        } catch (err) {
+            console.error("Critical error fetching cars:", err)
+            // Show toast or alert in real app, here checking console
+        } finally {
+            setLoading(false)
         }
-        setLoading(false)
     }
 
     // Prepare Create Modal
