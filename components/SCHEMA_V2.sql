@@ -166,8 +166,14 @@ create policy "Customer create booking" on public.bookings for insert with check
 create or replace function public.handle_new_user()
 returns trigger as $$
 begin
-  insert into public.profiles (id, full_name, email, role)
-  values (new.id, new.raw_user_meta_data->>'full_name', new.email, 'customer');
+  insert into public.profiles (id, full_name, email, phone, role)
+  values (
+    new.id, 
+    new.raw_user_meta_data->>'full_name', 
+    new.email, 
+    new.raw_user_meta_data->>'phone',
+    'customer'
+  );
   return new;
 end;
 $$ language plpgsql security definer;

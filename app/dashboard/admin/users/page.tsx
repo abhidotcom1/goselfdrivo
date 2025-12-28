@@ -34,7 +34,8 @@ export default function AdminUsersPage() {
                 bookings (
                     id,
                     total_amount,
-                    total_amount
+                    total_amount,
+                    status
                 )
             `)
             .order('created_at', { ascending: false })
