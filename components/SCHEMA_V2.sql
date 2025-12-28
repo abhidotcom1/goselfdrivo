@@ -167,11 +167,11 @@ create policy "Cars viewable by all" on public.cars for select using (true);
 -- Admin Full Access Policies
 -- (Using simple role check)
 
-create policy "Admins all cars" on public.cars for all using ((select role from public.profiles where id = auth.uid()) = 'admin');
-create policy "Admins all bookings" on public.bookings for all using ((select role from public.profiles where id = auth.uid()) = 'admin');
-create policy "Admins all locks" on public.car_locks for all using ((select role from public.profiles where id = auth.uid()) = 'admin');
-create policy "Admins all expenses" on public.expenses for all using ((select role from public.profiles where id = auth.uid()) = 'admin');
-create policy "Admins all payments" on public.payments for all using ((select role from public.profiles where id = auth.uid()) = 'admin');
+create policy "Admins all cars" on public.cars for all using ((select role from public.profiles where id = auth.uid()) in ('admin', 'super_admin'));
+create policy "Admins all bookings" on public.bookings for all using ((select role from public.profiles where id = auth.uid()) in ('admin', 'super_admin'));
+create policy "Admins all locks" on public.car_locks for all using ((select role from public.profiles where id = auth.uid()) in ('admin', 'super_admin'));
+create policy "Admins all expenses" on public.expenses for all using ((select role from public.profiles where id = auth.uid()) in ('admin', 'super_admin'));
+create policy "Admins all payments" on public.payments for all using ((select role from public.profiles where id = auth.uid()) in ('admin', 'super_admin'));
 
 -- Customer Policies
 create policy "Customer view own bookings" on public.bookings for select using (auth.uid() = user_id);

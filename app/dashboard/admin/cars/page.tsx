@@ -95,47 +95,53 @@ export default function AdminCarsPage() {
         e.preventDefault()
         setIsSubmitting(true)
 
-        // Process images
-        const processedImages = carForm.images
-            .map(url => url.trim())
-            .filter(url => url.length > 0)
+        try {
+            // Process images
+            const processedImages = carForm.images
+                .map(url => url.trim())
+                .filter(url => url.length > 0)
 
-        const carData = {
-            name: carForm.name,
-            car_number: carForm.car_number,
-            image_urls: processedImages,
-            fuel_type: carForm.fuel_type,
-            transmission: carForm.transmission,
-            seats: Number(carForm.seats),
-            min_booking_hours: Number(carForm.min_booking_hours),
-            hourly_rate: Number(carForm.hourly_rate),
-            // Don't override status on edit unless strictly needed, usually status is managed via actions
-            status: editingCar ? editingCar.status : 'AVAILABLE'
-        }
+            const carData = {
+                name: carForm.name,
+                car_number: carForm.car_number,
+                image_urls: processedImages,
+                fuel_type: carForm.fuel_type,
+                transmission: carForm.transmission,
+                seats: Number(carForm.seats),
+                min_booking_hours: Number(carForm.min_booking_hours),
+                hourly_rate: Number(carForm.hourly_rate),
+                // Don't override status on edit unless strictly needed, usually status is managed via actions
+                status: editingCar ? editingCar.status : 'AVAILABLE'
+            }
 
-        let error
-        if (editingCar) {
-            // Update
-            const { error: updateError } = await supabase
-                .from('cars')
-                .update(carData)
-                .eq('id', editingCar.id)
-            error = updateError
-        } else {
-            // Insert
-            const { error: insertError } = await supabase
-                .from('cars')
-                .insert([carData])
-            error = insertError
-        }
+            let error
+            if (editingCar) {
+                // Update
+                const { error: updateError } = await supabase
+                    .from('cars')
+                    .update(carData)
+                    .eq('id', editingCar.id)
+                error = updateError
+            } else {
+                // Insert
+                const { error: insertError } = await supabase
+                    .from('cars')
+                    .insert([carData])
+                error = insertError
+            }
 
-        if (error) {
-            alert(`Error ${editingCar ? 'updating' : 'adding'} car: ` + error.message)
-        } else {
-            fetchCars()
-            setIsAddModalOpen(false)
+            if (error) {
+                alert(`Error ${editingCar ? 'updating' : 'adding'} car: ` + error.message)
+            } else {
+                fetchCars()
+                setIsAddModalOpen(false)
+            }
+        } catch (err: any) {
+            console.error(err)
+            alert('An unexpected error occurred: ' + (err.message || 'Unknown error'))
+        } finally {
+            setIsSubmitting(false)
         }
-        setIsSubmitting(false)
     }
 
     // Maintenance Toggle
