@@ -129,21 +129,27 @@ export default function AdminCarsPage() {
                 status: editingCar ? editingCar.status : 'AVAILABLE'
             }
 
-            let error
+            // Safety timeout
+            const timeoutPromise = new Promise((_, reject) =>
+                setTimeout(() => reject(new Error('Operation timed out')), 10000)
+            )
+
+            let operationPromise;
             if (editingCar) {
                 // Update
-                const { error: updateError } = await supabase
+                operationPromise = supabase
                     .from('cars')
                     .update(carData)
                     .eq('id', editingCar.id)
-                error = updateError
             } else {
                 // Insert
-                const { error: insertError } = await supabase
+                operationPromise = supabase
                     .from('cars')
                     .insert([carData])
-                error = insertError
             }
+
+            const { error: opError } = await Promise.race([operationPromise, timeoutPromise]) as any
+            const error = opError
 
             if (error) {
                 alert(`Error ${editingCar ? 'updating' : 'adding'} car: ` + error.message)
