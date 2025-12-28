@@ -46,8 +46,11 @@ export default function Navbar() {
               ) : user ? (
                 <div className="flex items-center gap-4">
                   <div className="hidden md:flex flex-col items-end mr-2">
-                    <span className="text-sm font-semibold text-gray-900">{user.email?.split('@')[0]}</span>
+                    <span className="text-sm font-semibold text-gray-900">{user.email?.split('@')[0] || 'User'}</span>
                     <Link href="/dashboard" className="text-xs text-gray-500 hover:text-[#F5B301]">My Dashboard</Link>
+                  </div>
+                  <div className="h-10 w-10 rounded-full bg-[#1C1C1C] text-[#F5B301] flex items-center justify-center font-bold text-lg border border-gray-200">
+                    {user.email?.[0].toUpperCase() || 'U'}
                   </div>
                   <button
                     onClick={() => signOut()}

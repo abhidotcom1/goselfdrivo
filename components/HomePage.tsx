@@ -56,9 +56,8 @@ export default function HomePage() {
 
         const fetchCars = async () => {
             try {
-                // Ensure auth session is ready if needed by RLS, though standard client handles it.
-                // We add a small delay or check? No, shared client should have state if initialized.
-
+                // Fetch ALL available cars regardless of auth status
+                // The RLS policy 'true' should allow this.
                 const { data, error } = await supabase
                     .from('cars')
                     .select('*')
@@ -69,10 +68,11 @@ export default function HomePage() {
 
                 if (error) {
                     console.error('Error fetching cars:', error);
+                    // Fallback to mock if fetch fails
                     setCars(MOCK_CARS);
                 } else if (!data || data.length === 0) {
-                    // If no cars in DB, show Mock cars so the homepage isn't empty during demo
-                    console.log('No cars found, using mock data');
+                    // No cars in DB? Show Mock data so site isn't empty
+                    console.log('No cars in DB, utilizing mock data for display');
                     setCars(MOCK_CARS);
                 } else {
                     setCars(data);
