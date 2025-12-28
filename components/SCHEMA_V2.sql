@@ -20,7 +20,7 @@ create table public.profiles (
   driver_license_url text, -- For verification
   id_proof_url text,      -- For verification
   is_verified boolean default false, -- Admin verification status
-  role text check (role in ('admin', 'customer', 'driver', 'owner')) default 'customer',
+  role text check (role in ('super_admin', 'admin', 'customer', 'driver', 'owner')) default 'customer',
   created_at timestamptz default now()
 );
 
